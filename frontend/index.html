@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foxy Survival</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-bg"></div>
+    <main class="layout">
+      <section class="game-panel">
+        <header class="hud">
+          <div class="hud-item">HP: <span id="hp">100</span></div>
+          <div class="hud-item">分数: <span id="score">0</span></div>
+          <div class="hud-item">存活: <span id="time">0</span>s</div>
+          <div class="hud-item">波次: <span id="wave">1</span></div>
+          <div class="hud-item">刷怪率: <span id="spawnRate">0.80</span>/s</div>
+        </header>
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="gameCanvas" width="960" height="540" aria-label="game canvas"></canvas>
+          <div id="crosshair" class="crosshair hidden">
+            <span class="crosshair-line up"></span>
+            <span class="crosshair-line right"></span>
+            <span class="crosshair-line down"></span>
+            <span class="crosshair-line left"></span>
+            <span class="crosshair-center"></span>
+            <span id="crosshairAmmo" class="crosshair-ammo">6/6</span>
+            <span class="crosshair-cd"><span id="crosshairCdFill" class="crosshair-cd-fill"></span></span>
+          </div>
+        </div>
+        <div class="hint">WASD移动 / 鼠标瞄准点击射击 / 左Shift翻滚 / 移动端使用下方按钮</div>
+
+        <div class="mobile-controls" id="mobileControls">
+          <div class="joystick-zone" id="leftStickZone">
+            <div class="stick-base">
+              <div class="stick-knob" id="leftStickKnob"></div>
+            </div>
+            <div class="stick-label">MOVE</div>
+          </div>
+
+          <div class="mobile-skills">
+            <button id="rollBtn" class="skill-btn">ROLL</button>
+            <button id="burstBtn" class="skill-btn burst">BURST</button>
+          </div>
+
+          <div class="joystick-zone" id="rightStickZone">
+            <div class="stick-base">
+              <div class="stick-knob" id="rightStickKnob"></div>
+            </div>
+            <div class="stick-label">AIM</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="side-panel">
+        <section class="card">
+          <h1>Foxy Survival</h1>
+          <p>在森林中生存，击退史莱姆，冲击排行榜。</p>
+          <button id="startBtn">开始游戏</button>
+          <button id="restartBtn" class="ghost">重新开始</button>
+        </section>
+
+        <section class="card tutorial-card">
+          <h2>玩法教程</h2>
+          <p>这是一款生存射击游戏。掌握位移、翻滚和爆发节奏是关键。</p>
+
+          <details open>
+            <summary>1. 基础操作</summary>
+            <div class="tutorial-grid tutorial-text-only">
+              <div>
+                <p>桌面端：WASD移动，鼠标瞄准，左键单发，右键扇形爆发，左Shift翻滚。</p>
+                <p>移动端：左摇杆移动，右摇杆持续瞄准射击，ROLL与BURST为独立技能键。</p>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>2. 射击与技能系统</summary>
+            <div class="tutorial-grid">
+              <img src="./assets/Sprites/Bullet.png" alt="子弹图示" class="tutorial-img bullet" />
+              <div>
+                <p>弹匣容量为 6 发，普通射击伤害为 1，射程较长。</p>
+                <p>右键/BURST会一次打空剩余子弹，形成前方扇形弹幕，单发伤害为 2 但射程减半。</p>
+                <p>翻滚期间减伤 50%，并立即装填弹匣。翻滚拥有冷却，准心下方进度条可观察冷却状态。</p>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>3. 敌人种类与生存压力</summary>
+            <div class="tutorial-grid">
+              <div class="slimer-stack" aria-label="三种史莱姆首帧展示">
+                <div class="slimer-sample">
+                  <div class="slimer-frame green" role="img" aria-label="绿色史莱姆首帧"></div>
+                  <span>绿色 · 1HP</span>
+                </div>
+                <div class="slimer-sample">
+                  <div class="slimer-frame blue" role="img" aria-label="蓝色史莱姆首帧"></div>
+                  <span>蓝色 · 2HP</span>
+                </div>
+                <div class="slimer-sample">
+                  <div class="slimer-frame yellow" role="img" aria-label="黄色史莱姆首帧"></div>
+                  <span>黄色 · 3HP</span>
+                </div>
+              </div>
+              <div>
+                <p>绿色史莱姆：1滴血，数量最多。</p>
+                <p>蓝色史莱姆：2滴血，概率中等。</p>
+                <p>黄色史莱姆：3滴血，概率较低但更危险。</p>
+                <p>每只史莱姆速度随机，速度越快，移动动画播放也越快。</p>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>4. 地图与节奏设计</summary>
+            <div class="tutorial-grid">
+              <img src="./assets/Sprites/ForestBackground.png" alt="森林地图背景" class="tutorial-img map" />
+              <div>
+                <p>地图为横向扩展场景，镜头会跟随角色移动。</p>
+                <p>角色与敌人主要活动在画面的下三分之一区域，保证战斗阅读性。</p>
+                <p>敌人从当前镜头边界之外刷新，持续制造压迫感。</p>
+              </div>
+            </div>
+          </details>
+
+        </section>
+
+        <section class="card hidden" id="submitCard">
+          <h2>游戏结束</h2>
+          <p>最终分数：<span id="finalScore">0</span></p>
+          <label for="playerName">昵称</label>
+          <input id="playerName" maxlength="30" placeholder="输入昵称" />
+          <button id="submitScoreBtn">提交分数</button>
+          <div id="submitStatus"></div>
+        </section>
+
+        <section class="card leaderboard">
+          <h2>排行榜 TOP 10</h2>
+          <ol id="leaderboardList"></ol>
+        </section>
+      </aside>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
