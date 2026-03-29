@@ -1,0 +1,48 @@
+# 作用：编排 demo 前端、后端与 PostgreSQL 三服务。
+# 使用方法：在 demo 目录执行 docker compose up -d --build。
+# 输入输出：输入为 demo 子目录镜像构建配置，输出为可联通的全栈运行环境。
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: demo-webgame-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - demo_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+    container_name: demo-webgame-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: demo-webgame-frontend
+    restart: unless-stopped
+    ports:
+      - "18080:80"
+    depends_on:
+      - backend
+
+volumes:
+  demo_pgdata:

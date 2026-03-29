@@ -1,0 +1,8 @@
+# 作用：定义 demo 后端运行所需依赖。
+# 使用方法：由 Dockerfile 在构建镜像时通过 pip 安装。
+# 输入输出：输入为包名与版本，输出为可复现的 Python 环境。
+fastapi==0.115.12
+uvicorn[standard]==0.34.0
+SQLAlchemy==2.0.38
+psycopg2-binary==2.9.10
+python-multipart==0.0.20

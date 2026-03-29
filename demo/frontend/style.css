@@ -1,0 +1,141 @@
+/* 作用：定义 demo 页面布局、像素风字体与交互样式。
+使用方法：由 index.html 引入后自动生效。
+输入输出：输入为 DOM 结构，输出为可读性良好的双栏界面。 */
+@font-face {
+  font-family: "UranusPixel";
+  src: url("./assets/Uranus_Pixel_11Px.ttf") format("truetype");
+}
+
+:root {
+  --bg: #0c1f1b;
+  --panel: #17342d;
+  --panel-border: #2d6356;
+  --text: #def6ea;
+  --accent: #ffc15e;
+  --danger: #ff6f61;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 0%, #215447 0%, var(--bg) 42%, #091512 100%);
+  color: var(--text);
+  font-family: "UranusPixel", monospace;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(280px, 1fr);
+  gap: 16px;
+  padding: 16px;
+}
+
+.left-panel,
+.right-panel {
+  background: color-mix(in srgb, var(--panel) 92%, black 8%);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.hud {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: auto;
+  border: 1px solid #376f61;
+  border-radius: 10px;
+  background: #112822;
+}
+
+.hint {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #b8e8d7;
+}
+
+.right-panel {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.card {
+  background: #102923;
+  border: 1px solid #315f54;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid #5b8f7f;
+  border-radius: 8px;
+  background: #1f4e42;
+  color: var(--text);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(1.1);
+}
+
+button.ghost {
+  background: transparent;
+}
+
+input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  border: 1px solid #4d8677;
+  border-radius: 8px;
+  background: #0d211c;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.hidden {
+  display: none;
+}
+
+.status {
+  margin: 8px 0 0;
+  color: var(--accent);
+}
+
+#submitStatus.ok {
+  color: #74f2a5;
+  margin-top: 8px;
+}
+
+#submitStatus.err {
+  color: var(--danger);
+  margin-top: 8px;
+}
+
+ol {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+
+@media (max-width: 980px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

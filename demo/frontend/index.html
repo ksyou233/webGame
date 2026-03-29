@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- 作用：提供 demo 前端页面结构。
+使用方法：由 Nginx 直接托管，加载 style.css、config.js、app.js。
+输入输出：输入为用户交互，输出为可玩的 Canvas 页面与排行榜 UI。 -->
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foxy Survival Demo</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="left-panel">
+        <header class="hud">
+          <div>HP: <span id="hp">100</span></div>
+          <div>分数: <span id="score">0</span></div>
+          <div>存活: <span id="time">0</span>s</div>
+          <div>波次: <span id="wave">1</span></div>
+        </header>
+        <canvas id="gameCanvas" width="960" height="540" aria-label="demo game canvas"></canvas>
+        <p class="hint">WASD 移动，鼠标左键射击。被史莱姆碰到会掉血，血量归零后可提交成绩。</p>
+      </section>
+
+      <aside class="right-panel">
+        <section class="card">
+          <h1>Foxy Survival Demo</h1>
+          <p>最简全栈演示：前端玩法 + 后端接口 + PostgreSQL 持久化。</p>
+          <button id="startBtn">开始游戏</button>
+          <button id="restartBtn" class="ghost">重新开始</button>
+          <p id="statusText" class="status">等待开始</p>
+        </section>
+
+        <section class="card hidden" id="submitCard">
+          <h2>游戏结束</h2>
+          <p>最终分数：<span id="finalScore">0</span></p>
+          <label for="playerName">昵称</label>
+          <input id="playerName" maxlength="30" placeholder="输入昵称" />
+          <button id="submitScoreBtn">提交分数</button>
+          <div id="submitStatus"></div>
+        </section>
+
+        <section class="card">
+          <h2>排行榜 TOP 10</h2>
+          <ol id="leaderboardList"></ol>
+        </section>
+      </aside>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
